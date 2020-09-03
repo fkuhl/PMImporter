@@ -6,6 +6,17 @@
 //
 
 import Foundation
+import PMDataTypes
 
-print("Hello, World!")
+do {
+    let blobData = try Data(contentsOf: URL(fileURLWithPath: "/Users/fkuhl/Desktop/members-pm.json"))
+    let blob = try jsonDecoder.decode(ImportedBlob.self, from: blobData)
+    NSLog("got \(blob.households.count) households")
+} catch {
+    if let err = error as? DecodingError {
+        NSLog("decode error \(err)")
+    } else {
+        NSLog("failed data: \(error.localizedDescription)")
+    }
+}
 
