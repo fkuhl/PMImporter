@@ -44,4 +44,19 @@ public struct ImportedMember: Codable {
     public var baptism: String? = nil
     public var services: [Service] = []
     public var dateLastChanged: Date? = nil
+    
+    
+    public func isEmpty() -> Bool {
+        return nugatory(familyName) && nugatory(givenName)
+    }
+    
+    /** A function, not computed property, because a computed property interferes with encoding and decoding. */
+    public func fullName() -> String {
+        if self.isEmpty() { return "[no value]" }
+        let previousContribution = nugatory(previousFamilyName) ? "" : " (\(previousFamilyName!))"
+        let nickContribution = nugatory(nickname) ? "" : " \"\(nickname!)\""
+        let middleContribution = nugatory(middleName) ? "" : " \(middleName!)"
+        let suffixContrib = nugatory(nameSuffix) ? "" : " \(nameSuffix!)"
+        return "\(familyName), \(givenName)\(middleContribution)\(suffixContrib)\(previousContribution)\(nickContribution)"
+    }
 }
