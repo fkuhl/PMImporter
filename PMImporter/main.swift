@@ -10,51 +10,104 @@ import PMDataTypes
 
 var blob = readBlob()
 NSLog("\(blob.households.count) households, \(blob.members.count) members, \(blob.addresses.count) addresses")
-let addressesByImportedIndex = index(addresses: blob.addresses)
-let mansionInTheSky = makeMansionInTheSky()
+let importedAddressesByIndex = index(addresses: blob.addresses)
+var mansionInTheSky = makeMansionInTheSky()
 removeTempAddressesFrom(members: &blob.members)
-let membersByImportedIndex = index(members: &blob.members, adding: mansionInTheSky)
-validateHouseholds(in: &blob, against: membersByImportedIndex, and: addressesByImportedIndex)
+let importedMembersByIndex = index(members: &blob.members, adding: mansionInTheSky)
+validateHouseholds(in: &blob, against: importedMembersByIndex)
+let addressesByIndex = create(from: importedAddressesByIndex)
+let membersByIndex = create(from: importedMembersByIndex, mansionId: mansionInTheSky.id)
+populate(mansionInTheSky: &mansionInTheSky, from: membersByIndex)
+let households = create(from: blob.households, members: membersByIndex, addresses: addressesByIndex, mansionInTheSky: mansionInTheSky)
+
 
 /**
- Check integrity of member and address references.
- - Postcondition: Households with nil head are removed, or unknown indexes, are removed.
+ mansionInTheSky should have all DEAD members as 'others'.
  */
-func validateHouseholds(in blob: inout ImportedBlob, against memberIndex: [Id:ImportedMember], and addressIndex: [Id:ImportedAddress]) {
-    let culledHouseholds = blob.households.filter{ isValid(household: $0, against: membersByImportedIndex, and: addressesByImportedIndex) }
-    blob.households = culledHouseholds
+func populate(mansionInTheSky: inout Household, from members: [Id:Member]) {
+    for member in members.values {
+        if member.household == mansionInTheSky.id {
+            mansionInTheSky.others.append(member)
+        }
+    }
 }
 
-func isValid(household: ImportedHousehold, against memberIndex: [Id:ImportedMember], and addressIndex: [Id:ImportedAddress]) -> Bool {
-    var isValid = true
-    if let head = household.head {
-        if memberIndex[head] == nil {
-            isValid = false
-            NSLog("household \(household._id) has unk head \(head)")
+/**
+ Create PM Households.
+ - Precondition: Households with nil heads have been removed.
+ */
+func create(from importedHouseholds: [ImportedHousehold],
+            members: [Id:Member],
+            addresses: [Id:Address],
+            mansionInTheSky: Household) -> [Household] {
+    var households = [mansionInTheSky]
+    for imported in importedHouseholds {
+        var household = Household()
+        household.id = imported._id
+        if let head = members[imported.head ?? ""] { //see precond
+            household.head = head
         }
-    } else {
-        isValid = false
-        NSLog("household \(household._id) has nil head")
+        household.spouse = nil
+        if let spouseIndex = imported.spouse, let spouse = members[spouseIndex] {
+            household.spouse = spouse
+        }
+        var others = [Member]()
+        for otherIndex in imported.others {
+            if let other = members[otherIndex] {
+                others.append(other)
+            }
+        }
+        if let addressIndex = imported.address, let address = addresses[addressIndex] {
+            household.address = address
+        }
+        households.append(household)
     }
-    if let spouse = household.spouse {
-        if memberIndex[spouse] == nil {
-            isValid = false
-            NSLog("household \(household._id) has unk spouse \(spouse)")
+    return households
+}
+
+
+/**
+ Create PM Members.
+ - Postcondition: Any Member lacking an address is supplied with the Mansion In the Sky.
+ */
+func create(from imported: [Id:ImportedMember], mansionId: Id) -> [Id:Member] {
+    var members = [Id:Member]()
+    for (index, mem) in imported {
+        members[index] = mem.createMember(mansionId: mansionId)
+    }
+    return members
+}
+
+
+/**
+ Create PM Addresses.
+ */
+func create(from imported: [Id:ImportedAddress]) -> [Id:Address] {
+    var addresses = [Id:Address]()
+    for (index, addr) in imported {
+        addresses[index] = addr.createAddress()
+    }
+    return addresses
+}
+
+
+/**
+ Check integrity of head reference.
+ - Postcondition: Households with nil or unknown head are removed.
+ */
+func validateHouseholds(in blob: inout ImportedBlob, against memberIndex: [Id:ImportedMember]) {
+    let culledHouseholds = blob.households.filter { household in
+        if let head = household.head {
+            if memberIndex[head] == nil {
+                NSLog("household \(household._id) has unk head \(head)")
+                return false
+            } else { return true }
+        } else {
+            NSLog("household \(household._id) has nil head")
+            return false
         }
     }
-//    household.others.forEach { other in
-//        if memberIndex[other] == nil {
-//            isValid = false
-//            NSLog("household \(household._id) has unk other \(other)")
-//        }
-//    }
-    if let address = household.address {
-        if addressIndex[address] == nil {
-            isValid = false
-            NSLog("household \(household._id) has unk addr \(address)")
-        }
-    }
-    return isValid
+    blob.households = culledHouseholds
 }
 
 
@@ -124,11 +177,6 @@ func readBlob() -> ImportedBlob {
     do {
         let blobData = try Data(contentsOf: URL(fileURLWithPath: "/Users/fkuhl/Desktop/members-pm.json"))
         let blob = try jsonDecoder.decode(ImportedBlob.self, from: blobData)
-//        for household in blob.households {
-//            if (household.head == nil) {
-//                NSLog("nil household, id \(household._id)")
-//            }
-//        }
         return blob
     } catch {
         if let err = error as? DecodingError {
