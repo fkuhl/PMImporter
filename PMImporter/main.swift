@@ -14,12 +14,39 @@ let importedAddressesByIndex = index(addresses: blob.addresses)
 var mansionInTheSky = makeMansionInTheSky()
 removeTempAddressesFrom(members: &blob.members)
 let importedMembersByIndex = index(members: &blob.members, adding: mansionInTheSky)
+NSLog("indexed \(importedMembersByIndex.count) imported members")
 validateHouseholds(in: &blob, against: importedMembersByIndex)
+NSLog("after validation, have \(blob.households.count) households")
 let addressesByIndex = create(from: importedAddressesByIndex)
+NSLog("indexed \(addressesByIndex.count) PM Addresses")
 let membersByIndex = create(from: importedMembersByIndex, mansionId: mansionInTheSky.id)
+NSLog("indexed \(membersByIndex.count) PM Members")
 populate(mansionInTheSky: &mansionInTheSky, from: membersByIndex)
+NSLog("mansionInTheSky now has \(mansionInTheSky.others.count) others")
 let households = create(from: blob.households, members: membersByIndex, addresses: addressesByIndex, mansionInTheSky: mansionInTheSky)
+NSLog("created \(households.count) PM Households")
+let byteCount = write(households: households)
+NSLog("wrote \(byteCount) bytes")
 
+
+/**
+ Write households!
+ */
+func write(households: [Household]) -> Int {
+    do {
+        let data = try jsonEncoder.encode(households)
+        let byteCount = data.count
+        try data.write(to: URL(fileURLWithPath: "/Users/fkuhl/Desktop/test.pmrolls"))
+        return byteCount
+    } catch {
+        if let err = error as? EncodingError {
+            NSLog("encode error \(err)")
+        } else {
+            NSLog("failed data: \(error.localizedDescription)")
+        }
+        exit(1)
+    }
+}
 
 /**
  mansionInTheSky should have all DEAD members as 'others'.
@@ -55,8 +82,11 @@ func create(from importedHouseholds: [ImportedHousehold],
         for otherIndex in imported.others {
             if let other = members[otherIndex] {
                 others.append(other)
+            } else {
+                NSLog("household '\(household.head.fullName())' had unk other index \(otherIndex)")
             }
         }
+        household.others = others
         if let addressIndex = imported.address, let address = addresses[addressIndex] {
             household.address = address
         }

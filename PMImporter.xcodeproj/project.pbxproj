@@ -8,11 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		279F3FE62501603F00DCE7D7 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279F3FE52501603F00DCE7D7 /* main.swift */; };
-		279F3FEE250160A400DCE7D7 /* PMDataTypes in Frameworks */ = {isa = PBXBuildFile; productRef = 279F3FED250160A400DCE7D7 /* PMDataTypes */; };
 		279F3FF22501615700DCE7D7 /* ImportedMember.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279F3FF12501615700DCE7D7 /* ImportedMember.swift */; };
 		279F3FF42501631A00DCE7D7 /* ImportedAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279F3FF32501631A00DCE7D7 /* ImportedAddress.swift */; };
 		279F3FF6250163C200DCE7D7 /* ImportedHousehold.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279F3FF5250163C200DCE7D7 /* ImportedHousehold.swift */; };
 		279F3FF82501649100DCE7D7 /* ImportedBlob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279F3FF72501649100DCE7D7 /* ImportedBlob.swift */; };
+		27C6B4A125069E340086181F /* PMDataTypes in Frameworks */ = {isa = PBXBuildFile; productRef = 27C6B4A025069E340086181F /* PMDataTypes */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -41,7 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				279F3FEE250160A400DCE7D7 /* PMDataTypes in Frameworks */,
+				27C6B4A125069E340086181F /* PMDataTypes in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,7 +93,7 @@
 			);
 			name = PMImporter;
 			packageProductDependencies = (
-				279F3FED250160A400DCE7D7 /* PMDataTypes */,
+				27C6B4A025069E340086181F /* PMDataTypes */,
 			);
 			productName = PMImporter;
 			productReference = 279F3FE22501603F00DCE7D7 /* PMImporter */;
@@ -123,7 +123,7 @@
 			);
 			mainGroup = 279F3FD92501603F00DCE7D7;
 			packageReferences = (
-				279F3FEC250160A400DCE7D7 /* XCRemoteSwiftPackageReference "PMDataTypes" */,
+				27C6B49F25069E340086181F /* XCRemoteSwiftPackageReference "PMDataTypes" */,
 			);
 			productRefGroup = 279F3FE32501603F00DCE7D7 /* Products */;
 			projectDirPath = "";
@@ -311,20 +311,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		279F3FEC250160A400DCE7D7 /* XCRemoteSwiftPackageReference "PMDataTypes" */ = {
+		27C6B49F25069E340086181F /* XCRemoteSwiftPackageReference "PMDataTypes" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "git@github.com:fkuhl/PMDataTypes.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.0;
+				minimumVersion = 4.1.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		279F3FED250160A400DCE7D7 /* PMDataTypes */ = {
+		27C6B4A025069E340086181F /* PMDataTypes */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 279F3FEC250160A400DCE7D7 /* XCRemoteSwiftPackageReference "PMDataTypes" */;
+			package = 27C6B49F25069E340086181F /* XCRemoteSwiftPackageReference "PMDataTypes" */;
 			productName = PMDataTypes;
 		};
 /* End XCSwiftPackageProductDependency section */
