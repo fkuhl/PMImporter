@@ -34,6 +34,7 @@
 		279F3FF32501631A00DCE7D7 /* ImportedAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportedAddress.swift; sourceTree = "<group>"; };
 		279F3FF5250163C200DCE7D7 /* ImportedHousehold.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportedHousehold.swift; sourceTree = "<group>"; };
 		279F3FF72501649100DCE7D7 /* ImportedBlob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportedBlob.swift; sourceTree = "<group>"; };
+		27C6B4A22506A9A70086181F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +52,7 @@
 		279F3FD92501603F00DCE7D7 = {
 			isa = PBXGroup;
 			children = (
+				27C6B4A22506A9A70086181F /* README.md */,
 				279F3FE42501603F00DCE7D7 /* PMImporter */,
 				279F3FE32501603F00DCE7D7 /* Products */,
 			);
