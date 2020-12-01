@@ -9,39 +9,58 @@ import Foundation
 import PMDataTypes
 import CryptoKit
 import CommonCrypto
+import ArgumentParser
 
-var blob = readBlob()
-NSLog("\(blob.households.count) households, \(blob.members.count) members, \(blob.addresses.count) addresses")
-let importedAddressesByIndex = index(addresses: blob.addresses)
-var mansionInTheSky = makeMansionInTheSky()
-removeTempAddressesFrom(members: &blob.members)
-let importedMembersByIndex = index(members: &blob.members, adding: mansionInTheSky)
-NSLog("indexed \(importedMembersByIndex.count) imported members")
-validateHouseholds(in: &blob, against: importedMembersByIndex)
-NSLog("after validation, have \(blob.households.count) households")
-let addressesByIndex = create(from: importedAddressesByIndex)
-NSLog("indexed \(addressesByIndex.count) PM Addresses")
-let membersByIndex = create(from: importedMembersByIndex, mansionId: mansionInTheSky.id)
-NSLog("indexed \(membersByIndex.count) PM Members")
-populate(mansionInTheSky: &mansionInTheSky, from: membersByIndex)
-NSLog("mansionInTheSky now has \(mansionInTheSky.others.count) others")
-let households = create(from: blob.households, members: membersByIndex, addresses: addressesByIndex, mansionInTheSky: mansionInTheSky)
-NSLog("created \(households.count) PM Households")
-#warning("password from arguments!")
-let key = createKey(password: "1234")
-let byteCount = write(households: households, withKey: key)
-NSLog("wrote \(byteCount) bytes")
+struct Import: ParsableCommand {
+    static let configuration = CommandConfiguration(
+            abstract: "Converts old PeriMeleon JSON to new, encrypted PeriMeleon document.")
+    
+    @Argument(help: "Input JSON file")
+    var inputFileName: String
+    
+    @Argument(help: "Output encrypted PeriMeleon doc file")
+    var outputFileName: String
+    
+    @Argument(help: "Password")
+    var password: String
+    
+    func run() {
+        var blob = readBlob(from: inputFileName)
+        NSLog("\(blob.households.count) households, \(blob.members.count) members, \(blob.addresses.count) addresses")
+        let importedAddressesByIndex = index(addresses: blob.addresses)
+        var mansionInTheSky = makeMansionInTheSky()
+        removeTempAddressesFrom(members: &blob.members)
+        let importedMembersByIndex = index(members: &blob.members, adding: mansionInTheSky)
+        NSLog("indexed \(importedMembersByIndex.count) imported members")
+        validateHouseholds(in: &blob, against: importedMembersByIndex)
+        NSLog("after validation, have \(blob.households.count) households")
+        let addressesByIndex = create(from: importedAddressesByIndex)
+        NSLog("indexed \(addressesByIndex.count) PM Addresses")
+        let membersByIndex = create(from: importedMembersByIndex, mansionId: mansionInTheSky.id)
+        NSLog("indexed \(membersByIndex.count) PM Members")
+        populate(mansionInTheSky: &mansionInTheSky, from: membersByIndex)
+        NSLog("mansionInTheSky now has \(mansionInTheSky.others.count) others")
+        let households = create(from: blob.households, members: membersByIndex, addresses: addressesByIndex, mansionInTheSky: mansionInTheSky)
+        NSLog("created \(households.count) PM Households")
+        let key = createKey(password: password)
+        let byteCount = write(households: households, to: outputFileName, withKey: key)
+        NSLog("wrote \(byteCount) bytes")
+    }
+}
+
+Import.main()
+
 
 
 /**
  Write households!
  */
-func write(households: [Household], withKey: SymmetricKey) -> Int {
+func write(households: [Household], to outputFileName: String, withKey key: SymmetricKey) -> Int {
     do {
         let unencrypted = try jsonEncoder.encode(households)
         let encrypted = try! ChaChaPoly.seal(unencrypted, using: key).combined
         let byteCount = encrypted.count
-        try encrypted.write(to: URL(fileURLWithPath: "/Users/fkuhl/Desktop/test.pmrolls"))
+        try encrypted.write(to: URL(fileURLWithPath: outputFileName))
         return byteCount
     } catch {
         if let err = error as? EncodingError {
@@ -217,9 +236,9 @@ func index(addresses: [ImportedAddress]) -> [Id: ImportedAddress] {
 }
 
 
-func readBlob() -> ImportedBlob {
+func readBlob(from inputFileName: String) -> ImportedBlob {
     do {
-        let blobData = try Data(contentsOf: URL(fileURLWithPath: "/Users/fkuhl/Desktop/members-pm.json"))
+        let blobData = try Data(contentsOf: URL(fileURLWithPath: inputFileName))
         let blob = try jsonDecoder.decode(ImportedBlob.self, from: blobData)
         return blob
     } catch {

@@ -13,6 +13,7 @@
 		279F3FF6250163C200DCE7D7 /* ImportedHousehold.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279F3FF5250163C200DCE7D7 /* ImportedHousehold.swift */; };
 		279F3FF82501649100DCE7D7 /* ImportedBlob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279F3FF72501649100DCE7D7 /* ImportedBlob.swift */; };
 		27C6B4A125069E340086181F /* PMDataTypes in Frameworks */ = {isa = PBXBuildFile; productRef = 27C6B4A025069E340086181F /* PMDataTypes */; };
+		27E04D8F2576EB87007DB893 /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = 27E04D8E2576EB87007DB893 /* ArgumentParser */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -42,6 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27E04D8F2576EB87007DB893 /* ArgumentParser in Frameworks */,
 				27C6B4A125069E340086181F /* PMDataTypes in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -96,6 +98,7 @@
 			name = PMImporter;
 			packageProductDependencies = (
 				27C6B4A025069E340086181F /* PMDataTypes */,
+				27E04D8E2576EB87007DB893 /* ArgumentParser */,
 			);
 			productName = PMImporter;
 			productReference = 279F3FE22501603F00DCE7D7 /* PMImporter */;
@@ -126,6 +129,7 @@
 			mainGroup = 279F3FD92501603F00DCE7D7;
 			packageReferences = (
 				27C6B49F25069E340086181F /* XCRemoteSwiftPackageReference "PMDataTypes" */,
+				27E04D8D2576EB87007DB893 /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
 			);
 			productRefGroup = 279F3FE32501603F00DCE7D7 /* Products */;
 			projectDirPath = "";
@@ -323,6 +327,14 @@
 				minimumVersion = 4.1.0;
 			};
 		};
+		27E04D8D2576EB87007DB893 /* XCRemoteSwiftPackageReference "swift-argument-parser" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-argument-parser";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.3.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -330,6 +342,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 27C6B49F25069E340086181F /* XCRemoteSwiftPackageReference "PMDataTypes" */;
 			productName = PMDataTypes;
+		};
+		27E04D8E2576EB87007DB893 /* ArgumentParser */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 27E04D8D2576EB87007DB893 /* XCRemoteSwiftPackageReference "swift-argument-parser" */;
+			productName = ArgumentParser;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
