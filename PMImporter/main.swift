@@ -57,7 +57,9 @@ Import.main()
  */
 func write(households: [Household], to outputFileName: String, withKey key: SymmetricKey) -> Int {
     do {
-        let unencrypted = try jsonEncoder.encode(households)
+        var unencrypted = try jsonEncoder.encode(households)
+        ///Uncomment this line to create a file that can't be decoded!
+        //unencrypted.append("junk }".data(using: .utf8)!)
         let encrypted = try! ChaChaPoly.seal(unencrypted, using: key).combined
         let byteCount = encrypted.count
         try encrypted.write(to: URL(fileURLWithPath: outputFileName))
