@@ -12,7 +12,7 @@ import PMDataTypes
  As imported from PM. Cf. _id and tempAddress
  */
 public struct ImportedMember: Codable {
-    public var _id: Id
+    public var _id: ID
     public var familyName: String = ""
     public var givenName: String = ""
     public var middleName: String? = nil
@@ -26,15 +26,15 @@ public struct ImportedMember: Codable {
     public var status: MemberStatus = .COMMUNING
     public var resident: Bool = true
     public var exDirectory: Bool = false
-    public var household: Id? = nil //DEAD members haven't been given mansion yet
-    public var tempAddress: Id? = nil
+    public var household: ID? = nil //DEAD members haven't been given mansion yet
+    public var tempAddress: ID? = nil
     public var transactions: [Transaction] = []
     public var maritalStatus: MaritalStatus = .SINGLE
     public var spouse: String? = nil
     public var dateOfMarriage: Date? = nil
     public var divorce: String? = nil
-    public var father: Id? = nil
-    public var mother: Id? = nil
+    public var father: ID? = nil
+    public var mother: ID? = nil
     public var eMail: String? = nil
     public var workEmail: String? = nil
     public var mobilePhone: String? = nil
@@ -60,7 +60,7 @@ public struct ImportedMember: Codable {
         return "\(familyName), \(givenName)\(middleContribution)\(suffixContrib)\(previousContribution)\(nickContribution)"
     }
     
-    func createMember(mansionId: Id) -> Member {
+    func createMember(mansionId: ID) -> Member {
         var m = Member()
         m.id = self._id
         m.familyName = self.familyName

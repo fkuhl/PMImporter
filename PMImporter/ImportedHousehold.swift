@@ -9,9 +9,9 @@ import Foundation
 import PMDataTypes
 
 public struct ImportedHousehold: Codable {
-    public var _id: Id = ""
-    public var head: Id? = nil //sketchy! who doesn't have a head?
-    public var spouse: Id? = nil
-    public var others: [Id] = []
-    public var address: Id? = nil
+    public var _id: ID = ""
+    public var head: ID? = nil //sketchy! who doesn't have a head?
+    public var spouse: ID? = nil
+    public var others: [ID] = []
+    public var address: ID? = nil
 }

@@ -9,7 +9,7 @@ import Foundation
 import PMDataTypes
 
 public struct ImportedAddress: Codable {
-    public var _id: Id
+    public var _id: ID
     public var address: String? = ""
     public var address2: String? = nil
     public var city: String? = ""

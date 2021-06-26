@@ -86,7 +86,7 @@ func createKey(password: String) -> SymmetricKey {
 /**
  mansionInTheSky should have all DEAD members as 'others'.
  */
-func populate(mansionInTheSky: inout Household, from members: [Id:Member]) {
+func populate(mansionInTheSky: inout Household, from members: [ID:Member]) {
     for member in members.values {
         if member.household == mansionInTheSky.id {
             mansionInTheSky.others.append(member)
@@ -99,8 +99,8 @@ func populate(mansionInTheSky: inout Household, from members: [Id:Member]) {
  - Precondition: Households with nil heads have been removed.
  */
 func create(from importedHouseholds: [ImportedHousehold],
-            members: [Id:Member],
-            addresses: [Id:Address],
+            members: [ID:Member],
+            addresses: [ID:Address],
             mansionInTheSky: Household) -> [Household] {
     var households = [mansionInTheSky]
     for imported in importedHouseholds {
@@ -135,8 +135,8 @@ func create(from importedHouseholds: [ImportedHousehold],
  Create PM Members.
  - Postcondition: Any Member lacking an address is supplied with the Mansion In the Sky.
  */
-func create(from imported: [Id:ImportedMember], mansionId: Id) -> [Id:Member] {
-    var members = [Id:Member]()
+func create(from imported: [ID:ImportedMember], mansionId: ID) -> [ID:Member] {
+    var members = [ID:Member]()
     for (index, mem) in imported {
         members[index] = mem.createMember(mansionId: mansionId)
     }
@@ -147,8 +147,8 @@ func create(from imported: [Id:ImportedMember], mansionId: Id) -> [Id:Member] {
 /**
  Create PM Addresses.
  */
-func create(from imported: [Id:ImportedAddress]) -> [Id:Address] {
-    var addresses = [Id:Address]()
+func create(from imported: [ID:ImportedAddress]) -> [ID:Address] {
+    var addresses = [ID:Address]()
     for (index, addr) in imported {
         addresses[index] = addr.createAddress()
     }
@@ -160,7 +160,7 @@ func create(from imported: [Id:ImportedAddress]) -> [Id:Address] {
  Check integrity of head reference.
  - Postcondition: Households with nil or unknown head are removed.
  */
-func validateHouseholds(in blob: inout ImportedBlob, against memberIndex: [Id:ImportedMember]) {
+func validateHouseholds(in blob: inout ImportedBlob, against memberIndex: [ID:ImportedMember]) {
     let culledHouseholds = blob.households.filter { household in
         if let head = household.head {
             if memberIndex[head] == nil {
@@ -182,8 +182,8 @@ func validateHouseholds(in blob: inout ImportedBlob, against memberIndex: [Id:Im
  - Postcondition: Household index is still the imported index, not the Mongo, but nil household replaced by mansionInTheSky..
  - Returns index of members by imported index.
  */
-func index(members: inout [ImportedMember], adding mansion: Household) -> [Id:ImportedMember] {
-    var index = [Id:ImportedMember]()
+func index(members: inout [ImportedMember], adding mansion: Household) -> [ID:ImportedMember] {
+    var index = [ID:ImportedMember]()
     for member in members {
         var m = member
         if m.household == nil {
@@ -231,8 +231,8 @@ func makeMansionInTheSky() -> Household {
 /**
  Address instances by imported index.
  */
-func index(addresses: [ImportedAddress]) -> [Id: ImportedAddress] {
-    var index = [Id: ImportedAddress]()
+func index(addresses: [ImportedAddress]) -> [ID: ImportedAddress] {
+    var index = [ID: ImportedAddress]()
     addresses.forEach { index[$0._id] = $0 }
     return index
 }
