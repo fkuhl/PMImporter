@@ -19,7 +19,7 @@ public struct ImportedMember: Codable {
     public var previousFamilyName: String? = nil
     public var nameSuffix: String? = nil
     public var title: String? = nil
-    public var nickname: String? = nil
+    public var nickName: String? = nil
     public var sex: Sex = .MALE
     public var dateOfBirth: Date? = nil
     public var placeOfBirth: String? = nil
@@ -54,7 +54,7 @@ public struct ImportedMember: Codable {
     public func fullName() -> String {
         if self.isEmpty() { return "[no value]" }
         let previousContribution = nugatory(previousFamilyName) ? "" : " (\(previousFamilyName!))"
-        let nickContribution = nugatory(nickname) ? "" : " \"\(nickname!)\""
+        let nickContribution = nugatory(nickName) ? "" : " \"\(nickName!)\""
         let middleContribution = nugatory(middleName) ? "" : " \(middleName!)"
         let suffixContrib = nugatory(nameSuffix) ? "" : " \(nameSuffix!)"
         return "\(familyName), \(givenName)\(middleContribution)\(suffixContrib)\(previousContribution)\(nickContribution)"
@@ -69,7 +69,7 @@ public struct ImportedMember: Codable {
         m.previousFamilyName = self.previousFamilyName
         m.nameSuffix = self.nameSuffix
         m.title = self.title
-        m.nickname = self.nickname
+        m.nickname = self.nickName
         m.sex = self.sex
         m.dateOfBirth = self.dateOfBirth
         m.placeOfBirth = self.placeOfBirth
